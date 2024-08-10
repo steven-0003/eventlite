@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layouts/default}">
+<head>
+  <title layout:title-pattern="$LAYOUT_TITLE: $CONTENT_TITLE">EventLite</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/webjars/font-awesome/css/all.min.css" />
+</head>
+<body>
+  
+  <div class="container">
+
+    <div layout:fragment="content">
+    	<center>
+    	  <h1>Welcome to EventLite</h1>
+    	  <p>See the <a href="/events">list of events</a> or our <a href="/venues">venues</a> for more information.</p>
+    	</center>
+    
+    	<!-- TODO: UPCOMING 3 EVENTS - Gundeep -->
+    	<h2>Upcoming Events</h2>
+    	<div class="card-deck" style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+          <!-- Loop through the upcoming events and display each event -->
+          
+          <div th:each="event : ${upcomingEvents}">
+            <div class="card">
+              <div class="card-header">
+                <h5 th:text="${event.name}">Event Name</h5>
+              </div>
+              <div class="card-body">
+                <p>
+                  Venue: <span th:text="${event.venue.name}">Venue Name</span><br>
+                  Date: <span th:text="${event.date}">Event Date</span><br>
+                  Time: <span th:text="${event.time}">Event Time</span><br>
+                  Description: <span th:text="${event.description}">Event Description</span><br>
+                </p>
+                <a th:href="@{/events/{id}(id=${event.id})}" class="btn btn-primary">More Details</a>
+              </div>
+            </div>
+          </div>
+        </div>  
+        
+        <br> <br>
+        
+        <!-- TOP 3 VENUES WITH MOST EVENTS -->
+        <h2>Top Venues</h2>
+        <div class="card-deck" style="display: flex; flex-direction: row; align-items: center; justify-content: center;">
+          <!-- Loop through the top 3 venues and display each venue -->
+          <div th:each="venue : ${topVenues}">
+            <div class="card">
+              <div class="card-header">
+                <h5 th:text="${venue.name}">Venue Name</h5>
+              </div>
+              <div class="card-body">
+                <p>
+                  Capacity: <span th:text="${venue.capacity}">0</span><br>
+                  Address Line 1: <span th:text="${venue.roadName}">0</span><br>
+                  Post Code: <span th:text="${venue.postCode}">0</span><br>
+                  
+                </p>
+                <a th:href="@{/venues/{id}(id=${venue.id})}" class="btn btn-primary">More Details</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+  </div>
+
+  <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/webjars/popper.js/umd/popper.min.js"></script>
+  <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

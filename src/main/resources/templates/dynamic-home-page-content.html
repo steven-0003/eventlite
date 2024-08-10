@@ -1,0 +1,22 @@
+<div id="dynamic-home-page-content">
+     <th:block th:with="sortedEvents=${#lists.sort(futureEvents, 'date')}">
+        <th:block th:each="event, iterStat : ${sortedEvents}" th:if="${iterStat.index lt 3}">
+            <div class="card">
+                <div class="card-header">
+                    <h5 th:text="${event.name}">Event Title</h5>
+                </div>
+                <div class="card-body">
+                    <p>
+                        Venue: <span th:text="${event.venue.name}">Event Venue</span><br>
+                        Date: <span th:text="${event.date}">Event Date</span><br>
+                        Time: <span th:text="${event.time}">Event Time</span><br>
+                        Description: <span th:text="${event.description}">Event Description</span><br>
+                    </p>
+                    <a th:href="@{/events/{id} (id=${event.id})}" class="btn btn-primary">More Details</a>
+                </div>
+                <!-- closing div for card body -->
+            </div>
+            <!-- closing div for card -->
+        </th:block>
+    </th:block>
+</div>

@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+  <title th:text="${event.name}"></title>
+
+  <script src="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v3.2.0/mapbox-gl.css" rel="stylesheet">
+  <style>
+    #map {
+      width: 100%;
+      height: 400px;
+    }
+  </style>
+
+</head>
+<body>
+  <div layout:fragment="content">
+	<h2 th:text="${event.name}">Event Details</h2>
+	
+	<hr>
+	<div id="datum">
+		<h4><i class="fa-solid fa-map-marker-alt"></i> Venue: </h4>
+		<h4>
+			<a th:href="@{/venues/{id} (id=${event.venue.id})}" th:text="${event.venue.name}">Event venue</a>
+		</h4>
+	</div>
+	<div id="datum">
+		<h4><i class="fa-solid fa-calendar"></i> Date: </h4>
+		<h4 th:text="${event.dateToString()}">Date</h4>
+	</div>
+	<div th:if="${event.time != null}">
+		<h4><i class="fa-solid fa-clock"></i> Time: </h4>
+		<h4 th:text="${event.time}">Time</h4>
+	</div>
+	<div th:if="${event.description != null}">
+		<hr>
+		<h4><i class="fa-solid fa-info-circle"></i> About</h4>
+		<p th:text="${event.description}">Description</p>
+	</div>
+
+    <div id="map"></div>
+    <script th:inline="javascript">
+
+	/*<![CDATA[*/
+  var event = /*[[${event}]]*/;
+	var lng = /*[[${event.venue.longitude}]]*/;
+    var lat = /*[[${event.venue.latitude}]]*/;
+    
+    /*]]>*/
+	
+	console.log(lng);
+	console.log(lat);
+    // Initialize map
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZXZlbnRsaXRlMDYiLCJhIjoiY2x1czlncmtlMGl2YzJpbjFoYzE2dTh0aSJ9.PZUblGn1NDcduly1RR1H-A';
+
+
+
+	var map = new mapboxgl.Map({
+      container: 'map',
+      center: [lng, lat], // centred at venue loc
+      zoom: 10 // start zoom
+    });
+    
+    //Initialise empty bounds
+    var bounds = new mapboxgl.LngLatBounds();
+    
+    // Create popup for the event
+    var popup = new mapboxgl.Popup({ offset: 25 })
+         		.setHTML(`
+				    <div class="popup-content">
+				        <h5><strong> ${event.name} </strong></h5>
+				        <strong>Venue:</strong> ${event.venue.name} <br>
+				        <strong>Date:</strong> ${event.date} <br>
+				        <strong>Time:</strong> ${event.time} <br>
+				        <a href="/events/${event.id}" class="btn btn-primary btn-sm">More Details</a>
+				    </div>
+				`);
+
+    // marker
+    var marker = new mapboxgl.Marker()
+      .setLngLat([lng, lat])
+      .setPopup(popup)
+      .addTo(map);
+      
+    // New LngLat instance for the event
+    var point = new mapboxgl.LngLat(lng, lat);
+    
+    //extend bounds to include the current point
+    bounds.extend(point);
+    
+    // Fit the map viewport according to bounds
+    map.fitBounds(bounds, {padding: 20})
+
+	map.easeTo({
+        zoom: 16, // set your desired zoom level here
+        duration: 2000, // set the duration of the animation in milliseconds
+        easing: function (t) {
+            return t;
+            }
+    })
+  </script>
+	
+	<div sec:authorize="isAuthenticated()">
+	<form  th:action="@{/events/{id}/mastodonPost (id=${event.id})}" th:method="post" class = "rounded-lg p-3" style="background-color: lightgray;">
+		<h4>Share the event!</h4>
+		<input class="form-control" type="text" name="content" id="content" autofocus="autofocus"/  th:placeholder="${event.name}">
+		<button type="submit" class="btn btn-secondary my-3" >Submit Post</button>
+	</form>
+	</div>
+		<div sec:authorize="hasAnyRole('EVENT_ORGANISER', 'ADMINISTRATOR')">
+		<form th:action="@{/events/{id}(id=${event.id})}" th:method="delete" th:object="${event}">
+   			<button type="submit" class="btn btn-danger" aria-hidden="true">Delete Event</button>
+       	</form> 	
+    </div>
+    <hr>
+    <a class="btn btn-primary" role="button" href="/events"><i class="fa-solid fa-arrow-left" aria-hidden="true"></i> Back</a>
+   </div>
+</body>
+</html>

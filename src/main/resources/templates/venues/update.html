@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/default}">
+<head>
+  <title>Update</title>
+</head>
+<body>
+  <div layout:fragment="content">
+    <h1>Update a venue</h1>
+    
+    <form action="#" th:action="@{/venues/updateVenue/{id} (id=${venue.id})}" th:object="${venue}" th:method="put">
+      <div class="form-group" th:classappend="${#fields.hasErrors('name')}? has-error">
+        <label for="name">Venue name</label>
+        <input class="form-control" type="text" name="name" id="name" th:with="name=*{name}" th:value="${venue.name}" autofocus="autofocus" />
+        <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">errors</p>
+      </div>
+      
+      <div class="form-group" th:classappend="${#fields.hasErrors('capacity')}? has-error">
+        <label for="capacity">Venue capacity</label>
+        <input class="form-control" type="number" name="capacity" id="capacity" th:with="capacity=*{capacity}" th:value="${venue.capacity}" autofocus="autofocus" />
+        <p class="text-danger" th:if="${#fields.hasErrors('capacity')}" th:errors="*{capacity}">errors</p>
+      </div>
+      
+      <div class="form-group" th:classappend="${#fields.hasErrors('roadName')}? has-error">
+        <label for="roadName">Road name</label>
+        <input class="form-control" type="text" name="roadName" id="roadName" th:with="roadName=*{roadName}" th:value="${venue.roadName}" autofocus="autofocus" />
+        <p class="text-danger" th:if="${#fields.hasErrors('roadName')}" th:errors="*{roadName}">errors</p>
+      </div>
+      
+      <div class="form-group" th:classappend="${#fields.hasErrors('postCode')}? has-error">
+        <label for="postCode">Post Code</label>
+        <input class="form-control" type="text" name="postCode" id="postCode" th:with="postCode=*{postCode}" th:value="${venue.postCode}" autofocus="autofocus" />
+        <p class="text-danger" th:if="${#fields.hasErrors('postCode')}" th:errors="*{postCode}">errors</p>
+      </div>
+      
+		
+      <button class="btn btn-primary" type="submit"><i class="fa-solid fa-bookmark" aria-hidden="true"></i> Save</button>
+      <a class="btn btn-warning" role="button" href="/venues"><i class="fa-solid fa-ban" aria-hidden="true"></i> Cancel</a>
+    </form>
+  </div>
+</body>
+</html>

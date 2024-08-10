@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+  <title layout:title-pattern="$LAYOUT_TITLE: $CONTENT_TITLE">EventLite</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.min.css" />
+  <link rel="stylesheet" href="/webjars/font-awesome/css/all.min.css" />
+</head>
+<body>
+  <div class="container">
+    <nav class="navbar navbar-expand-lg sticky-top navbar-dark bg-primary">
+      <a class="navbar-brand" href="/">EventLite</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+          <a class="nav-item nav-link active" href="/">Home <span class="sr-only">(current)</span></a>
+          <a class="nav-item nav-link active" href="/events">Events</a>
+          <a class="nav-item nav-link active" href="/venues">Venues</a>
+        </div>
+      </div>
+    
+      <div sec:authorize="!isAuthenticated()">
+        <i class="fa-solid fa-user-slash" aria-hidden="true"></i> Not signed in
+        <a class="btn btn-primary" role="button" th:href="@{/sign-in}">
+          <i class="fa-solid fa-sign-in-alt" aria-hidden="true"></i> Sign in
+       </a>
+      </div>
+      <div sec:authorize="isAuthenticated()">
+        <form th:action="@{/sign-out}" method="post">
+          <i class="fa-solid fa-user" aria-hidden="true"></i> Signed in as <span sec:authentication="name"></span>
+          <button type="submit" class="btn btn-warning"><i class="fa-solid fa-sign-out-alt" aria-hidden="true"></i> Sign out</button>
+        </form>
+      </div>
+    
+      <div class="alert alert-success alert-dismissible" role="alert" th:if="${ok_message}">
+      	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <i class="fa-solid fa-times" aria-hidden="true"></i>
+      	</button>
+
+      	<span th:text="${ok_message}">Success!</span>
+      </div>
+    
+      <div class="alert alert-danger alert-dismissible" role="alert" th:if="${error_message}">
+      	<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+          <i class="fa-solid fa-times" aria-hidden="true"></i>
+      	</button>
+
+      	<span th:text="${error_message}">Error!</span>
+      </div>
+    </nav>
+    <br>
+    <div layout:fragment="content">
+      Main page body goes here...
+    </div>
+  </div>
+
+  <script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+  <script type="text/javascript" src="/webjars/popper.js/umd/popper.min.js"></script>
+  <script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/default}">
+<head>
+  <title th:text="${venue.name}"></title>
+</head>
+<body>
+  <div layout:fragment="content">
+  <h1 th:text="${venue.name}"></h1>
+  <div th:if="${venue.roadName != null && venue.postCode != null}">
+  	<hr>
+  	<h4><i class="fa-solid fa-map-marker-alt"></i> Address: </h4>
+  	<h5 th:text="${{venue.roadName + ', ' + venue.postCode}}">Address</h5>
+  </div>
+  <div th:if="${venue.capacity != null}">
+  	<h4><i class="fa-solid fa-bar-chart"></i> Capacity: </h4>
+  	<h5 th:text="${venue.capacity}">Capacity</h5>
+  </div>
+  <hr>
+  <table class="table table-striped table-hover">
+  	<thead>
+  	    <tr style="background-color: lightgray;">
+            <td colspan="3"><h4>Events Coming Up</h4></td>
+        </tr>
+  		<tr>
+	      <th><i class="fa-solid fa-bolt"></i> Event</th>
+	      <th><i class="fa-solid fa-calendar"></i> Date</th>
+	      <th><i class="fa-solid fa-clock"></i> Time</th>
+      	</tr>
+    </thead>
+    <tbody>
+        <tr th:each="e : ${v_events}" >
+       	  <td>
+          	<a th:href="@{/events/{id} (id=${e.id})}" th:text="${e.name}">Event Name</a>
+          </td>
+          <td th:text="${{e.date}}">Event date</td>
+          <td th:text="${{e.time}}">Event time</td>
+        </tr>
+  </table>
+  <div sec:authorize="hasAnyRole('EVENT_ORGANISER', 'ADMINISTRATOR')">
+	 <form th:action="@{/venues/{id}(id=${venue.id})}" th:method="delete" th:object="${venue}">
+   		<button type="submit" class="btn btn-danger" aria-hidden="true">Delete Venue</button>
+     </form> 	
+  </div>
+  
+  </div>
+
+</body>
+</html>

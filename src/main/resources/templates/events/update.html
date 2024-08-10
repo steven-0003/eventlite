@@ -1,0 +1,55 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+  layout:decorate="~{layouts/default}">
+<head>
+  <title>Update</title>
+</head>
+<body>
+  <div layout:fragment="content">
+    <h1>Update an event</h1>
+    
+    <form action="#" th:action="@{/events/updateEvent/{id} (id=${event.id})}" th:object="${event}" th:method="put">
+      <div class="form-group" th:classappend="${#fields.hasErrors('name')}? has-error">
+        <label for="name">Event name</label>
+        <input class="form-control" type="text" name="name" id="name" th:with="name=*{name}" th:value="${event.name}" autofocus="autofocus" />
+        <p class="text-danger" th:if="${#fields.hasErrors('name')}" th:errors="*{name}">errors</p>
+      </div>
+      
+      <div class="form-group" th:classappend="${#fields.hasErrors('date')}? has-error">
+        <label for="date">Event date</label>
+        <input class="form-control" type="date" name="date" id="date" th:with="date=*{date}" th:value="${event.date}" autofocus="autofocus" />
+        <p class="text-danger" th:if="${#fields.hasErrors('date')}" th:errors="*{date}">errors</p>
+      </div>
+      
+      <div class="form-group" th:classappend="${#fields.hasErrors('time')}? has-error">
+        <label for="time">Event time</label>
+        <input class="form-control" type="time" name="time" id="time" th:with="time=*{time}" th:value="${event.time}" autofocus="autofocus" />
+        <p class="text-danger" th:if="${#fields.hasErrors('time')}" th:errors="*{time}">errors</p>
+      </div>
+      
+      <div class="form-group" th:classappend="${#fields.hasErrors('description')}? has-error">
+        <label for="time">Event description</label>
+        <textarea class="form-control" cols="40" rows="5" name="description" id="description" th:with="description=*{description}" th:field="${event.description}" autofocus="autofocus"></textarea>
+        <p class="text-danger" th:if="${#fields.hasErrors('description')}" th:errors="*{description}">errors</p>
+      </div>
+      
+      <div class="form-group" th:classappend="${#fields.hasErrors('venue')}? has-error">
+        <label for="venue">Event venue</label>
+        <select class="form-control" name="venue" id="venue" th:with="venue=*{venue}" autofocus="autofocus">
+        	<option th:each="venue:${venues}"
+        						th:value = "${venue.id}"
+        						th:text = "${venue.name}"
+        						th:selected ="${venue == event.venue}">
+        	</option>
+        </select>
+        <p class="text-danger" th:if="${#fields.hasErrors('venue')}" th:errors="*{venue}">errors</p>
+      </div>
+      
+      
+		
+      <button class="btn btn-primary" type="submit"><i class="fa-solid fa-bookmark" aria-hidden="true"></i> Save</button>
+      <a class="btn btn-warning" role="button" href="/events"><i class="fa-solid fa-ban" aria-hidden="true"></i> Cancel</a>
+    </form>
+  </div>
+</body>
+</html>
